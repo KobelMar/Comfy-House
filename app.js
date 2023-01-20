@@ -30,8 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const products = new Products();
 
   ui.setupApp();
-  //info: as getProducts() is async, it always returns a Promise(the array from map()), we can use '.then()'.
-  //...Anything inside of '.then()' will be executed if the promise resolves.
   products
     .getProducts()
     .then((products) => {
@@ -49,23 +47,11 @@ class Products {
   // async Function always return a Promise.
   async getProducts() {
     try {
-      //info: 'await' can be read like: the execution of the code is waiting,
-      //...until the code on the right of 'await' is finished/there.
-      // await is a better replacementf for '.then/.catch'. await is wainting for a Promise to resolve.
       let contentful = await client.getEntries();
-      console.log(contentful);
       let products = contentful.items;
 
-      // let data = await fetch("./products.json");
-      // let result = await data.json();
-      // let products = result.items;
-
       products = products.map((item) => {
-        //info: This is called "object destructuring": from "item.fields" it takes the first element
-        //...and assigns it to the first parameter "title" etc.
         const { title, price } = item.fields;
-
-        //info: curly braces is needed to destruct the 'item.sys' as it is an object.
         const { id } = item.sys;
         const image = item.fields.image.fields.file.url;
         return { title, price, id, image };
